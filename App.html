@@ -1,0 +1,73 @@
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
+import StudentDetails from './StudentDetails';
+
+const windowWidth = Dimensions.get('window').width;
+
+const students = [
+  {"id":1,"first_name":"Naruto","last_name":"Uzumaki","nick_name":"Naruto","course":"BSIT","year":1},
+  // ... (rest of the data)
+];
+
+export default function App() {
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => setSelectedItem(item)}
+      style={styles.item} // Use styles.item here
+    >
+      <Text style={{ fontSize: 16 }}>{item.nick_name}</Text>
+    </TouchableOpacity>
+  );
+
+  return (
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <FlatList
+          data={students}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()} // Use a unique identifier
+        />
+      </ScrollView>
+      {selectedItem && (
+        <StudentDetails
+          visible={true}
+          onClose={() => setSelectedItem(null)}
+          data={selectedItem}
+        />
+      )}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  scrollContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  item: {
+    fontSize: 16,
+    borderColor: 'orange',
+    borderStyle: 'solid',
+    borderWidth: 2,
+    width: windowWidth - 40, // Adjust width to fit the screen
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 5,
+  },
+});
